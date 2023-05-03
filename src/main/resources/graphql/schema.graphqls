@@ -1,0 +1,42 @@
+scalar Long
+
+type Author {
+    id: ID!
+    name: String!
+    age: Int
+}
+
+type Book {
+    id: ID!
+    title: String!
+    description: String
+    author: Author!
+}
+
+# Root Query
+type Query {
+    authors: [Author]!
+    authorById(authorId: ID!): Author
+    books: [Book]!
+    bookById(bookId: ID!): Book
+    booksByAuthor(authorId: ID!): [Book]!
+}
+
+input AuthorInput {
+    name: String!
+    age: Int
+}
+
+input BookInput {
+    title: String!
+    description: String
+    authorId: ID!
+}
+
+# Root Mutation
+type Mutation {
+    createAuthor(createAuthorRequest: AuthorInput): Author!
+    createBook(createBookRequest: BookInput): Book!
+    updateBook(id: ID!, title: String, description: String): Book!
+    deleteBook(id: ID!): Boolean
+}
