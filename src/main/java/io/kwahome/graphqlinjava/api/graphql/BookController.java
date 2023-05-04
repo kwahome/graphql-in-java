@@ -1,8 +1,7 @@
 package io.kwahome.graphqlinjava.api.graphql;
 
-import io.kwahome.graphqlinjava.api.graphql.dtos.CreateAuthorRequest;
 import io.kwahome.graphqlinjava.api.graphql.dtos.CreateBookRequest;
-import io.kwahome.graphqlinjava.exceptions.NotFoundException;
+import io.kwahome.graphqlinjava.api.graphql.exceptions.NotFoundException;
 import io.kwahome.graphqlinjava.model.Author;
 import io.kwahome.graphqlinjava.model.Book;
 import io.kwahome.graphqlinjava.repository.AuthorRepository;
@@ -34,6 +33,15 @@ public class BookController {
     @QueryMapping(name = "bookById")
     public Optional<Book> getBookById(@Argument Long bookId) {
         return this.bookRepository.findById(bookId);
+    }
+
+    @QueryMapping(name = "booksByAuthor")
+    public Iterable<Book> getBooksByAuthor(@Argument Long authorId) throws NotFoundException {
+        Author author = this.authorRepository
+            .findById(authorId)
+            .orElseThrow(() -> new NotFoundException(String.format("Author with id=%s not found", authorId)));
+
+        return this.bookRepository.findBooksByAuthor(author);
     }
 
     @MutationMapping()
